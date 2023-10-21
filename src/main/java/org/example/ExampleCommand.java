@@ -1,4 +1,4 @@
-package org.rusherhack.example;
+package org.example;
 
 import org.rusherhack.client.api.feature.command.Command;
 import org.rusherhack.core.command.annotations.CommandExecutor;

@@ -1,83 +1,94 @@
 plugins {
-    id 'fabric-loom' version '1.2-SNAPSHOT'
-    id 'maven-publish'
+	id 'fabric-loom' version '1.2-SNAPSHOT'
+	id 'maven-publish'
 }
 
 version = project.mod_version
 group = project.maven_group
 
+configurations {
+	rusherhackApi
+	rusherhackApi.canBeResolved(true)
+	compileOnly.extendsFrom(rusherhackApi)
+}
+
 repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
+	// Add repositories to retrieve artifacts from in here.
+	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
+	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
+	// for more information about repositories.
+	
+	maven {
+		name = "rusherhack"
+		//releases repository will have the latest api version for last stable rusherhack release
+		//snapshots will always be the latest api version
+		//url = "https://maven.rusherhack.org/releases"
+		url = "https://maven.rusherhack.org/snapshots"
+		credentials(PasswordCredentials)
+		authentication {
+			basic(BasicAuthentication)
+		}
+	}
+	
+	maven {
+		name = 'ParchmentMC'
+		url = 'https://maven.parchmentmc.org'
+	}
 }
 
 dependencies {
-    // To change the versions see the gradle.properties file
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
-
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	
+	//mojmap + parchment mappings
+	mappings loom.layered() {
+		officialMojangMappings()
+		parchment("org.parchmentmc.data:parchment-1.20.1:2023.07.30@zip")
+	}
+	
+	//rusherhack api
+	rusherhackApi "org.rusherhack:rusherhack-api:1.20.1-SNAPSHOT"
 }
 
-processResources {
-    inputs.property "version", project.version
-    inputs.property "minecraft_version", project.minecraft_version
-    inputs.property "loader_version", project.loader_version
-    filteringCharset "UTF-8"
+loom {
 
-    filesMatching("fabric.mod.json") {
-        expand "version": project.version,
-                "minecraft_version": project.minecraft_version,
-                "loader_version": project.loader_version
-    }
+	//apply accesswidener from rusherhack-api
+	for (final def f in zipTree(this.project.configurations.rusherhackApi.singleFile)) {
+		if(f.name == "rusherhack.accesswidener") {
+			accessWidenerPath = f
+		}
+	}
+	
+	//disable run configs
+	runConfigs.configureEach {
+		ideConfigGenerated = false
+	}
 }
 
 def targetJavaVersion = 17
 tasks.withType(JavaCompile).configureEach {
-    // ensure that the encoding is set to UTF-8, no matter what the system default is
-    // this fixes some edge cases with special characters not displaying correctly
-    // see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
-    // If Javadoc is generated, this must be specified in that task too.
-    it.options.encoding = "UTF-8"
-    if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release = targetJavaVersion
-    }
+	// ensure that the encoding is set to UTF-8, no matter what the system default is
+	// this fixes some edge cases with special characters not displaying correctly
+	// see http://yodaconditions.net/blog/fix-for-java-file-encoding-problems-with-gradle.html
+	// If Javadoc is generated, this must be specified in that task too.
+	it.options.encoding = "UTF-8"
+	if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
+		it.options.release = targetJavaVersion
+	}
 }
 
 java {
-    def javaVersion = JavaVersion.toVersion(targetJavaVersion)
-    if (JavaVersion.current() < javaVersion) {
-        toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
-    }
-    archivesBaseName = project.archives_base_name
-    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-    // if it is present.
-    // If you remove this line, sources will not be generated.
-    withSourcesJar()
+	def javaVersion = JavaVersion.toVersion(targetJavaVersion)
+	if (JavaVersion.current() < javaVersion) {
+		toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
+	}
+	archivesBaseName = project.archives_base_name
 }
 
 jar {
-    from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
-    }
-}
-
-// configure the maven publication
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-        }
-    }
-
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-    repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
-    }
+	manifest {
+		//attributes.clear()
+		attributes(
+				"Minecraft-Version": project.minecraft_version
+		)
+	}
 }

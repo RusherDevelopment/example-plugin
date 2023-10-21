@@ -1,4 +1,4 @@
-package org.rusherhack.example;
+package org.example;
 
 import org.rusherhack.client.api.RusherHackAPI;
 import org.rusherhack.client.api.plugin.Plugin;

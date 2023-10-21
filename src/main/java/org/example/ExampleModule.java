@@ -1,4 +1,4 @@
-package org.rusherhack.example;
+package org.example;
 
 import net.minecraft.world.entity.Entity;
 import org.rusherhack.client.api.RusherHackAPI;

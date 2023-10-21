@@ -1,4 +1,4 @@
-package org.rusherhack.example;
+package org.example;
 
 import org.rusherhack.client.api.feature.hud.ResizeableHudElement;
 import org.rusherhack.client.api.render.RenderContext;
