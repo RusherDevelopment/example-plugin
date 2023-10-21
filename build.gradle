@@ -24,10 +24,6 @@ repositories {
 		//snapshots will always be the latest api version
 		//url = "https://maven.rusherhack.org/releases"
 		url = "https://maven.rusherhack.org/snapshots"
-		credentials(PasswordCredentials)
-		authentication {
-			basic(BasicAuthentication)
-		}
 	}
 	
 	maven {
