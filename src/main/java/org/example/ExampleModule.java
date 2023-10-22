@@ -1,6 +1,7 @@
 package org.example;
 
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import org.rusherhack.client.api.RusherHackAPI;
 import org.rusherhack.client.api.events.client.EventUpdate;
 import org.rusherhack.client.api.events.render.EventRender2D;
@@ -12,7 +13,6 @@ import org.rusherhack.client.api.render.IRenderer3D;
 import org.rusherhack.client.api.render.font.IFontRenderer;
 import org.rusherhack.client.api.setting.BindSetting;
 import org.rusherhack.client.api.setting.ColorSetting;
-import org.rusherhack.client.api.setting.TargetsSetting;
 import org.rusherhack.client.api.utils.ChatUtils;
 import org.rusherhack.client.api.utils.WorldUtils;
 import org.rusherhack.core.bind.key.NullKey;
@@ -63,8 +63,6 @@ public class ExampleModule extends ToggleableModule {
 	private final BindSetting rotate = new BindSetting("RotateBind", NullKey.INSTANCE /* unbound */);
 	private final NumberSetting<Float> rotateYaw = new NumberSetting<>("Yaw", 0f, 0f, 360f).incremental(0.1f);
 	private final NumberSetting<Float> rotatePitch = new NumberSetting<>("Pitch", 0f, -90f, 90f).incremental(0.1f);
-	private final TargetsSetting rotateTargets = new TargetsSetting()
-			.all(false, false);
 	
 	/**
 	 * Constructor
@@ -73,7 +71,7 @@ public class ExampleModule extends ToggleableModule {
 		super("Example", "Example plugin module", ModuleCategory.CLIENT);
 		
 		//subsettings
-		this.rotate.addSubSettings(this.rotateYaw, this.rotatePitch, this.rotateTargets);
+		this.rotate.addSubSettings(this.rotateYaw, this.rotatePitch);
 		
 		//register settings
 		this.registerSettings(
@@ -120,7 +118,7 @@ public class ExampleModule extends ToggleableModule {
 			Entity target = null;
 			double dist = 999d;
 			for(Entity entity : WorldUtils.getEntitiesSorted()) {
-				if(mc.player.distanceTo(entity) < dist && this.rotateTargets.isTarget(entity)) {
+				if(mc.player.distanceTo(entity) < dist && entity instanceof LivingEntity) {
 					target = entity;
 					dist = mc.player.distanceTo(entity);
 				}
@@ -147,9 +145,7 @@ public class ExampleModule extends ToggleableModule {
 		
 		//highlight targets
 		for(Entity entity : WorldUtils.getEntities()) {
-			if(this.rotateTargets.isTarget(entity)) {
-				renderer.drawBox(entity, event.getPartialTicks(), true, true, color);
-			}
+			renderer.drawBox(entity, event.getPartialTicks(), true, true, color);
 		}
 		
 		//end renderer
