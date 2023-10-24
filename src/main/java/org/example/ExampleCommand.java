@@ -47,14 +47,14 @@ public class ExampleCommand extends Command {
 		return String.join(", ", this.stringList);
 	}
 	
-	@CommandExecutor(subCommand = "list add")
+	@CommandExecutor(subCommand = "add")
 	@CommandExecutor.Argument("string") //must set argument names
 	private String addToExampleList(String string) {
 		this.stringList.add(string);
 		return "Added " + string;
 	}
 	
-	@CommandExecutor(subCommand = {"list remove", "list del"})
+	@CommandExecutor(subCommand = {"remove", "del"})
 	@CommandExecutor.Argument("string") //must set argument names
 	private String removeFromExampleList(String string) {
 		if(this.stringList.remove(string)) {
