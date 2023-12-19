@@ -1,3 +1,12 @@
 {
-  "Plugin-Class": "org.example.ExamplePlugin"
+  "Plugin-Class": "org.example.ExamplePlugin",
+  "Name": "Example Plugin",
+  "Version": "${plugin_version}",
+  "Description": "Example rusherhack plugin",
+  "Authors": [
+    "John200410"
+  ],
+  "Minecraft-Versions": [
+    "1.20.1"
+  ]
 }

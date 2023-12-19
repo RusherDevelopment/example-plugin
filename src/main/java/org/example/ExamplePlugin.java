@@ -14,7 +14,6 @@ public class ExamplePlugin extends Plugin {
 	public void onLoad() {
 		
 		//logger
-		this.getLogger().info(this.getName() + " loaded!");
 		this.getLogger().info("Hello World!");
 		
 		//creating and registering a new module
@@ -32,7 +31,7 @@ public class ExamplePlugin extends Plugin {
 	
 	@Override
 	public void onUnload() {
-		this.getLogger().info(this.getName() + " unloaded!");
+		this.getLogger().info("Example plugin unloaded!");
 	}
 	
 	@Override
