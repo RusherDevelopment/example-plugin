@@ -34,23 +34,4 @@ public class ExamplePlugin extends Plugin {
 		this.getLogger().info("Example plugin unloaded!");
 	}
 	
-	@Override
-	public String getName() {
-		return "Example";
-	}
-	
-	@Override
-	public String getVersion() {
-		return "v1.0";
-	}
-	
-	@Override
-	public String getDescription() {
-		return "Example rusherhack plugin";
-	}
-	
-	@Override
-	public String[] getAuthors() {
-		return new String[]{"John200410"};
-	}
 }
