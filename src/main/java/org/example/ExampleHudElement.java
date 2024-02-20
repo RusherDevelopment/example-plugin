@@ -22,7 +22,7 @@ public class ExampleHudElement extends ResizeableHudElement {
 		try {
 			this.graphic = new TextureGraphic("exampleplugin/graphics/rh_head.png", 235, 234);
 		} catch (Throwable t) {
-			t.printStackTrace();
+			this.getLogger().error("Failed to load graphic", t);
 		}
 	}
 	
