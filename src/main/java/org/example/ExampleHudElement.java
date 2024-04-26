@@ -27,7 +27,7 @@ public class ExampleHudElement extends ResizeableHudElement {
 	}
 	
 	@Override
-	public void renderContent(RenderContext context, int mouseX, int mouseY) {
+	public void renderContent(RenderContext context, double mouseX, double mouseY) {
 		//positions are relative to the top left corner of the hud element, so start drawing stuff from 0,0
 		
 		if (this.graphic != null) {
