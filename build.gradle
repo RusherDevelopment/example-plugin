@@ -10,6 +10,11 @@ configurations {
 	rusherhackApi
 	rusherhackApi.canBeResolved(true)
 	compileOnly.extendsFrom(rusherhackApi)
+	productionRuntime {
+		extendsFrom configurations.minecraftLibraries
+		extendsFrom configurations.loaderLibraries
+		extendsFrom configurations.minecraftRuntimeLibraries
+	}
 }
 
 repositories {
@@ -17,7 +22,7 @@ repositories {
 	// Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
 	// See https://docs.gradle.org/current/userguide/declaring_repositories.html
 	// for more information about repositories.
-	
+
 	maven {
 		name = "rusherhack"
 		//releases repository will have the latest api version for last stable rusherhack release
@@ -34,7 +39,9 @@ repositories {
 
 dependencies {
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	
+	productionRuntime(modImplementation("net.fabricmc:fabric-loader:${project.fabric_loader_version}"))
+	productionRuntime("net.fabricmc:intermediary:${project.minecraft_version}")
+
 	//mojmap + parchment mappings
 	mappings loom.layered() {
 		officialMojangMappings()
@@ -45,15 +52,52 @@ dependencies {
 	rusherhackApi "org.rusherhack:rusherhack-api:$minecraft_version-SNAPSHOT"
 }
 
+tasks.register('runPlugin', JavaExec) {
+	group = "build"
+	dependsOn remapJar, downloadAssets, copyPluginToRunDir
+	classpath.from configurations.productionRuntime
+	mainClass = "net.fabricmc.loader.impl.launch.knot.KnotClient"
+	workingDir = file("run")
+
+	doFirst {
+		classpath.from loom.minecraftProvider.minecraftClientJar
+		workingDir.mkdirs()
+
+		args(
+				"--assetIndex", loom.minecraftProvider.versionInfo.assetIndex().fabricId(loom.minecraftProvider.minecraftVersion()),
+				"--assetsDir", new File(loom.files.userCache, "assets").absolutePath,
+				"--gameDir", workingDir.absolutePath
+		)
+
+		def rusherLoaderJarFile = project.layout.getProjectDirectory().file("lib/rusherhack-loader.jar").asFile
+		if (!rusherLoaderJarFile.exists()) {
+			throw new GradleException("rusherhack-loader.jar must be copied to the lib directory!")
+		}
+		def rusherLoaderJarPath = project.layout.getProjectDirectory().file("lib/rusherhack-loader.jar").asFile.absolutePath
+
+		jvmArgs(
+				"-Drusherhack.enablePlugins=true",
+				"-Dfabric.addMods=${rusherLoaderJarPath}",
+		)
+	}
+}
+
+tasks.register("copyPluginToRunDir", Copy) {
+	group = "build"
+	dependsOn remapJar
+	from remapJar.outputs
+	into file("run/rusherhack/plugins")
+}
+
 loom {
-	
+
 	//apply accesswidener from rusherhack-api
 	for (final def f in zipTree(this.project.configurations.rusherhackApi.singleFile)) {
 		if (f.name == "rusherhack.accesswidener") {
 			accessWidenerPath = f
 		}
 	}
-	
+
 	//disable run configs
 	runConfigs.configureEach {
 		ideConfigGenerated = false
@@ -82,7 +126,7 @@ java {
 
 processResources {
 	inputs.property "plugin_version", project.plugin_version
-	
+
 	filesMatching("rusherhack-plugin.json") {
 		expand(plugin_version: project.plugin_version)
 	}
