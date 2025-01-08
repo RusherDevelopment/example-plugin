@@ -65,7 +65,7 @@ tasks.register('updateAccessWidener', Copy) {
 	println("rusherhack access widener: " + accessWidenerFile)
 	
 	from(accessWidenerFile)
-	into(file("build/tmp"))
+	into(file("build/tmp/" + this.project.minecraft_version))
 }
 
 tasks.register('runPlugin', JavaExec) {
@@ -106,7 +106,7 @@ tasks.register("copyPluginToRunDir", Copy) {
 }
 
 loom {
-	def accessWidenerFile = new File("build/tmp/rusherhack.accesswidener")
+	def accessWidenerFile = new File("build/tmp/${this.project.minecraft_version}/rusherhack.accesswidener")
 	if(accessWidenerFile.exists()) {
 		accessWidenerPath = accessWidenerFile
 	} else {
