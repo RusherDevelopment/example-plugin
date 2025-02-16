@@ -3,6 +3,7 @@
   "Name": "${project.plugin_name}",
   "Version": "${project.plugin_version}",
   "Description": "Example rusherhack plugin",
+  "URL": "https://github.com/RusherDevelopment/example-plugin",
   "Authors": [
     "John200410"
   ],
