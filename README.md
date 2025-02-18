@@ -1,48 +1,59 @@
- Rusherhack Example Plugin
+# RusherHack Example Plugin
 
-This is an example plugin that shows how to use Rusherhack's plugin API. 
+An example implementation of a RusherHack plugin. 
 
-## Building:
+RusherHack plugins are custom add-ons written by developers to add new features to RusherHack.
 
-### Option 1: Intelij IDEA
-1. Download [intelij idea community edition](https://www.jetbrains.com/idea/download). Make sure to scroll down to community edition - pro costs money
-2. Install idea using whatever method you downloaded and run it
-3. It should look like this. Click "clone repository" and type in `https://github.com/john200410/example-plugin`
+## Setting up the Development Environment
 
-![image](https://github.com/user-attachments/assets/8fc7803a-423d-4d54-8022-98b0543e4817)
+### Installing Java Development Kit (JDK)
 
-4. Once it is done cloning (downloading) click on "trust project" and it should up the ide window
+For Minecraft versions 1.20.1-1.20.4, you will need to have JDK 17 installed. You can download it [here](https://www.azul.com/downloads/?version=java-17-lts&package=jdk#zulu).
 
-![image](https://github.com/user-attachments/assets/8fc7803a-423d-4d54-8022-98b0543e4817)
+For Minecraft versions 1.20.5 and newer, you will need to have JDK 21 installed. You can download it [here](https://www.azul.com/downloads/?version=java-21-lts&package=jdk#zulu).
 
-5. Click on the little elephant in the corner (Gradle)
+### Installing IntelliJ IDEA
 
-![image](https://github.com/user-attachments/assets/7f65b23e-42ce-4a36-b185-e235860c5220)
+IntelliJ IDEA is the preferred Java IDE for rusherhack plugin development.
 
-6. Click on the button that a box with a play button and then type "build" in the text box that pops up
+IntelliJ IDEA can be downloaded from [the official website](https://www.jetbrains.com/idea/download).
 
-![image](https://github.com/user-attachments/assets/f53ada2a-0e4f-4617-af26-5c2d4b680858)
+The Community edition is recommended because it is free and open-source.
 
-7. Press enter. A window should pop up in the bottom with a bunch of text info.
+## Clone the repository
 
-![image](https://github.com/user-attachments/assets/e1679529-06ee-40f4-94fd-044ad09276f1)
+In IntelliJ, when creating a new project there is an option to clone a repository:
 
-8. Once this is done (it should finish successfully, if it is unsuccessful, please ask in #plugins-dev) your compiled jar should be in the build/libs folder of the project folder. 
+<img src="https://rusherhack.org/i/zsa4nyb3v3m5ifk8gkyoywak.png" alt="cloning" width="600"/>
 
-9. You can open up the project folder using file explorer, and use that jar as you would with any other plugin (see [Rusherhack Plugins](https://github.com/RusherDevelopment/rusherhack-plugins/blob/main/README.md))
+In the URL, write the text `https://github.com/RusherDevelopment/example-plugin.git` and press `Clone` 
 
-   
-### Option 2: Linux command line
+<img src="https://rusherhack.org/i/2rdwc40q98ihb93lt1yykyw8.png" alt="cloning2" width="600"/>
 
-1. This method only works on Linux, WSL, and probably git bash. NOT POWERSHELL
-2. Open up terminal and run these commands in order
-```
-git clone https://github.com/john200410/example-plugin
-cd example-plugin
-chmod +x gradlew
-./gradlew build
-```
-3. If something goes wrong in any of these steps, you may not have java installed. Install something around the lines of `jdk21-openjdk` from your package manager. If more goes wrong, please ask in #plugins-dev
-4. Your compiled jar file should be in the build/libs subdirectory of the project folder.
-5. You can use that jar as you would with any other plugin (see [Rusherhack Plugins](https://github.com/RusherDevelopment/rusherhack-plugins/blob/main/README.md))
-![image](https://github.com/user-attachments/assets/470b84fd-10c4-48fc-827c-c88c6d635ab2)
+IntelliJ may prompt you asking if you trust the project. Click `Trust Project` to continue.
+
+You should now have a window that looks like this: 
+
+<img src="https://rusherhack.org/i/vwvie6ljusi2tfunyrmvty7j.png" alt="project" width="800"/>
+
+## Modifying the template
+
+- Open the `gradle.properties` file and modify it to your preferences.
+- Open the `src/main/resources/rusherhack-plugin.json` file and modify it to your preferences.
+  - The `Plugin-Class` property must match the main class of your plugin.
+  - The `Name`, `Version`, and `Minecraft-Versions` properties get automatically filled by the values in the `gradle.properties` file. You can add more Minecraft versions if you wish but compatibility between multiple versions is not guaranteed.
+
+## Building the plugin
+
+To build the plugin .jar file, you can run the `gradle build` task.
+
+1. Click on the elephant icon on the right of the screen (Gradle)
+2. Navigate to `Tasks` -> `build` -> `build` and double-click it: 
+
+<img src="https://rusherhack.org/i/jkdw12a3wtsz9vvwpvujo9px.png" alt="gradle" width="400"/>
+
+3. The compiled plugin .jar file will be located in the `build/libs` directory: 
+
+<img src="https://rusherhack.org/i/lfwho6o6vrqc4c3znl3pm60v.png" alt="build" width="400"/>
+
+To install the plugin into RusherHack, you can follow the instructions on the [RusherHack plugins repository](https://github.com/RusherDevelopment/rusherhack-plugins?tab=readme-ov-file#installation)
