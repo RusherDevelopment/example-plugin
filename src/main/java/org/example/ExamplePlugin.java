@@ -9,7 +9,7 @@ import org.rusherhack.client.api.plugin.Plugin;
  * @author John200410
  */
 public class ExamplePlugin extends Plugin {
-	
+
 	@Override
 	public void onLoad() {
 		
@@ -27,6 +27,10 @@ public class ExamplePlugin extends Plugin {
 		//creating and registering a new command
 		final ExampleCommand exampleCommand = new ExampleCommand();
 		RusherHackAPI.getCommandManager().registerFeature(exampleCommand);
+
+		//creating and registering a new window
+		final ExampleWindow exampleWindow = new ExampleWindow();
+		RusherHackAPI.getWindowManager().registerFeature(exampleWindow);
 	}
 	
 	@Override
